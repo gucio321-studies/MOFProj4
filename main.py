@@ -46,11 +46,24 @@ class Poison:
 
 def ex1():
     p = Poison()
-    p.iterate_until()
+    p.iterate_until(100)
+    u100 = p._u.copy() # _u is pointer so need to use copy here
+    p.iterate_until(500)
+    u500 = p._u.copy()
     plt.plot(p._a)
     plt.xlabel("iteration")
     plt.ylabel("a")
     plt.grid(True)
+    plt.show()
+    plt.subplot(1,2,1)
+    plt.imshow(u100)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("u after 100th iteration")
+    plt.subplot(1,2,2)
+    plt.imshow(u500)
+    plt.xlabel("x")
+    plt.ylabel("y")
     plt.show()
 
 ex1()
