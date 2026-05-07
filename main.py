@@ -26,6 +26,11 @@ class Poison:
     def u_ex1(self, i, j):
         u0 = self.u(i+1, j) + self.u(i-1, j) + self.u(i, j+1) + self.u(i, j-1)+ self.rho(i, j)*self.dx**2
         return (u0)/4
+    @staticmethod
+    def u_ex2(self, i, j, w=1.9):
+        a1 = (1-w)*self.u(i,j)
+        a2 = w/4*(self.u(i+1, j)+ self.u(i-1,j)+self.u(i,j+1)+self.u(i,j-1)+self.rho(i,j)*self.dx**2)
+        return a1+a2
     def a(self):
         result = 0
         dx2 = self.dx**2
@@ -60,6 +65,7 @@ class Poison:
                 self._delta[self.N+i][self.N+j] = self.delta(i, j)
 
 def ex1():
+    print("> ex1")
     p = Poison()
     p.iterate_until(100)
     u100 = p._u.copy() # _u is pointer so need to use copy here
@@ -67,18 +73,24 @@ def ex1():
     rho_dot100 = p._rho_dot.copy()
     delta100 = p._delta.copy()
 
+    print(">> it100 done")
+
     p.iterate_until(500)
     u500 = p._u.copy()
     p.gen_delta()
     rho_dot500 = p._rho_dot.copy()
     delta500 = p._delta.copy()
 
+    print(">> it500 done")
+
+    # 1.1
     plt.plot(p._a)
     plt.xlabel("iteration")
     plt.ylabel("a")
     plt.grid(True)
     plt.show()
 
+    # 1.2
     plt.subplot(1,2,1)
     plt.imshow(u100)
     plt.xlabel("x")
@@ -91,6 +103,7 @@ def ex1():
     plt.title("u after 500th iteration")
     plt.show()
 
+    # 1.3
     plt.subplot(2,2,1)
     plt.imshow(rho_dot100)
     plt.xlabel("x")
@@ -114,5 +127,17 @@ def ex1():
     plt.title("$\\delta$ after 500th iteration")
     plt.show()
 
+def ex2():
+    print("> ex2")
+    p = Poison(ex2=True)
+    p.iterate_until(500)
+    print(">> it500 done")
+
+    plt.plot(p._a)
+    plt.xlabel("iteration")
+    plt.ylabel("a")
+    plt.grid(True)
+    plt.show()
 
 ex1()
+ex2()
