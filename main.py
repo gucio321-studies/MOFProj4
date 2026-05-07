@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 class Poison:
-    def __init__(self,N=31, x0=4, d=4, dx=1):
+    def __init__(self,N=31, x0=4, d=4, dx=1, ex2=False):
         self.x0 = x0
         self.d = d
         self.dx = dx
@@ -13,7 +13,7 @@ class Poison:
         self._a = []
         self._rho_dot = np.zeros((self.N*2+1, self.N*2+1))
         self._delta = np.zeros((self.N*2+1, self.N*2+1))
-        self.u_calc = self.u_ex1
+        self.u_calc = self.u_ex1 if not ex2 else self.u_ex2
 
     def rho(self, x, y):
         d = self.d
