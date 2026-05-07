@@ -11,6 +11,8 @@ class Poison:
         self.N = N
         self._u = np.zeros((self.N*2+1, self.N*2+1))
         self._a = []
+        self._rho_dot = np.zeros((self.N*2+1, self.N*2+1))
+        self._delta = np.zeros((self.N*2+1, self.N*2+1))
         self.u_calc = self.u_ex1
 
     def rho(self, x, y):
@@ -43,18 +45,40 @@ class Poison:
         self._a.append(self.a())
     def iterate_until(self, max_iter=500):
         for _ in range(max_iter - len(self._a)): self.iterate()
+    def rho_dot(self, i, j):
+        return -1*(self.u(i+1, j) + self.u(i-1, j) + self.u(i, j-1) + self.u(i, j+1) - 4*self.u(i, j)) / self.dx**2
+    def gen_rho_dot(self):
+        for i in range(-self.N+1, self.N):
+            for j in range(-self.N+1, self.N):
+                self._rho_dot[i][j] = self.rho_dot(i,j)
+    def delta(self, i, j):
+        return self._rho_dot[i][j] - self.rho(i, j)
+    def gen_delta(self):
+        self.gen_rho_dot()
+        for i in range(-self.N+1, self.N):
+            for j in range(-self.N+1, self.N):
+                self._delta[i][j] = self.delta(i, j)
 
 def ex1():
     p = Poison()
     p.iterate_until(100)
     u100 = p._u.copy() # _u is pointer so need to use copy here
+    p.gen_delta()
+    rho_dot100 = p._rho_dot.copy()
+    delta100 = p._delta.copy()
+
     p.iterate_until(500)
     u500 = p._u.copy()
+    p.gen_delta()
+    rho_dot500 = p._rho_dot.copy()
+    delta500 = p._delta.copy()
+
     plt.plot(p._a)
     plt.xlabel("iteration")
     plt.ylabel("a")
     plt.grid(True)
     plt.show()
+
     plt.subplot(1,2,1)
     plt.imshow(u100)
     plt.xlabel("x")
@@ -64,6 +88,31 @@ def ex1():
     plt.imshow(u500)
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title("u after 500th iteration")
     plt.show()
+
+    plt.subplot(2,2,1)
+    plt.imshow(rho_dot100)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("$\\rho$' after 100th iteration")
+    plt.subplot(2,2,2)
+    plt.imshow(rho_dot500)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("$\\rho$' after 500th iteration")
+
+    plt.subplot(2,2,3)
+    plt.imshow(delta100)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("$\\delta$ after 100th iteration")
+    plt.subplot(2,2,4)
+    plt.imshow(delta500)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("$\\delta$ after 500th iteration")
+    plt.show()
+
 
 ex1()
