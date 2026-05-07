@@ -20,7 +20,7 @@ class Poison:
         x0 = self.x0
         return np.exp(-((x-x0)**2+y**2)/(d**2)) - np.exp(-((x+x0)**2+y**2)/(d**2))
     def u(self, i, j):
-        return self._u[i][j]
+        return self._u[self.N+i][self.N+j]
 
     @staticmethod
     def u_ex1(self, i, j):
@@ -41,7 +41,7 @@ class Poison:
     def iterate(self):
         for i in range(-self.N+1, self.N):
             for j in range(-self.N+1, self.N):
-                self._u[i][j] = self.u_calc(self, i, j)
+                self._u[self.N+i][self.N+j] = self.u_calc(self, i, j)
         self._a.append(self.a())
     def iterate_until(self, max_iter=500):
         for _ in range(max_iter - len(self._a)): self.iterate()
@@ -50,14 +50,14 @@ class Poison:
     def gen_rho_dot(self):
         for i in range(-self.N+1, self.N):
             for j in range(-self.N+1, self.N):
-                self._rho_dot[i][j] = self.rho_dot(i,j)
+                self._rho_dot[self.N+i][self.N+j] = self.rho_dot(i,j)
     def delta(self, i, j):
-        return self._rho_dot[i][j] - self.rho(i, j)
+        return self._rho_dot[self.N+i][self.N+j] - self.rho(i, j)
     def gen_delta(self):
         self.gen_rho_dot()
         for i in range(-self.N+1, self.N):
             for j in range(-self.N+1, self.N):
-                self._delta[i][j] = self.delta(i, j)
+                self._delta[self.N+i][self.N+j] = self.delta(i, j)
 
 def ex1():
     p = Poison()
