@@ -42,7 +42,7 @@ class Poison:
                 a2 /= dx2
                 a3 = self.rho(i, j)*self.u(i, j)
                 result += (a1 + a2 + a3)*dx2
-        return result
+        return -result
     def iterate(self):
         for i in range(-self.N+1, self.N):
             for j in range(-self.N+1, self.N):
