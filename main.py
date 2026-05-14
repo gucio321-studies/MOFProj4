@@ -67,13 +67,13 @@ class Poison:
 def ex1():
     print("> ex1")
     p = Poison()
-    p.iterate_until(100)
+    p.iterate_until(50)
     u100 = p._u.copy() # _u is pointer so need to use copy here
     p.gen_delta()
     rho_dot100 = p._rho_dot.copy()
     delta100 = p._delta.copy()
 
-    print(">> it100 done")
+    print(">> it50 done")
 
     p.iterate_until(500)
     u500 = p._u.copy()
@@ -95,7 +95,7 @@ def ex1():
     plt.imshow(u100)
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("u after 100th iteration")
+    plt.title("u after 50th iteration")
     plt.subplot(1,2,2)
     plt.imshow(u500)
     plt.xlabel("x")
@@ -119,7 +119,7 @@ def ex1():
     plt.imshow(delta100)
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("$\\delta$ after 100th iteration")
+    plt.title("$\\delta$ after 50th iteration")
     plt.subplot(2,2,4)
     plt.imshow(delta500)
     plt.xlabel("x")
